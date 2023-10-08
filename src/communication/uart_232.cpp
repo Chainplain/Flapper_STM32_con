@@ -13,9 +13,11 @@
 
 #include "main.h"
 #include "uart_232.h"
+#include "interface_uart.h"
 
 #define USE_UART_NUM 1
 UART232_Handle *uart_handle[USE_UART_NUM];
+UART_HandleTypeDef UartHandle;
 
 void vTaskUart(void *pvParameters)
 {
@@ -26,7 +28,21 @@ void vTaskUart(void *pvParameters)
 		for (int i = 0; i < USE_UART_NUM; i++)
 		{
 			if (uart_handle[i] != NULL)
-				uart_handle[i]->func_rx_check(uart_handle[i]);
+			{	
+				// osMutexWait(sendUartMutexId, osWaitForever);
+				char data[] = "Hello, UART!\n";
+				uint8_t uintArray[sizeof(data)];
+				for (int i = 0; i < sizeof(data); i++) {
+       			 uintArray[i] = (uint8_t)data[i];
+  			    }
+				// uintArray[0]  = sizeof(data);
+				uart_handle[i]->huart->pTxBuffPtr = uintArray;
+				uart_tx_dma_start(uart_handle[i]->huart,\
+								 sizeof(uintArray));
+				delay(100);
+				// uart_handle[i]->func_rx_check(uart_handle[i]);
+			}
+				
 		}
 		vTaskDelayMs(RX_ROLLING_INTERVEL_MS);
 	}
@@ -122,7 +138,7 @@ void uart_tx_dma_start(UART_HandleTypeDef *uartP, uint32_t len)
 	uartP->Lock = HAL_UNLOCKED;
 	uartP->hdmatx->Lock = HAL_UNLOCKED;
 
-	HAL_UART_Transmit_DMA(uartP, uartP->pTxBuffPtr, len);
+	HAL_UART_Transmit(uartP, uartP->pTxBuffPtr, len, 100);
 }
 
 /**  采用 桢头 + 包长度 的通讯协议
