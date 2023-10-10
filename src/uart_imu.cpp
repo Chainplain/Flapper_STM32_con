@@ -435,7 +435,7 @@ static uint32_t imu_uart_frame_construct(void)
 	uint8_t *txbuf = rs232_handle->huart->pTxBuffPtr;
 	uint8_t imu_data_len = uart232_handle.txDataBuffer[1] + 2;
 
-	// 桢头
+	// Frame头
 	uint8_t i;
 	txbuf[0] = 0x55;
 	txbuf[1] = 0xAF;

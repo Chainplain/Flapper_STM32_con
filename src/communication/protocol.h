@@ -16,12 +16,12 @@ public:
 	void init(uint8_t *buf, uint32_t headerlen = 2, uint32_t cmdlen = 1, uint32_t datanumlen = 1, uint32_t checklen = 1);
 
 public:
-	uint8_t *_header;	 // 桢头的匹配字符地址
-	uint32_t _headerLen; // 桢头长度
+	uint8_t *_header;	 // Frame头的匹配字符地址
+	uint32_t _headerLen; // Frame头长度
 	uint8_t *_cmdPtr;
-	uint32_t _cmdLen; // 桢CMD占用的字节数
+	uint32_t _cmdLen; // FrameCMD占用的字节数
 	uint8_t *_dataNum;
-	uint32_t _dataNumLen;	  // 桢数据长度占用的字节数
+	uint32_t _dataNumLen;	  // Frame数据长度占用的字节数
 	uint8_t _dataNumMsbFirst; // 是否是先高字节后低字节
 	uint8_t *_dataPtr;
 	uint32_t _checkLen;		// 检验位占用的字节数
@@ -30,9 +30,9 @@ public:
 	uint32_t _cmdEnd;		//
 	uint32_t _dataNumEnd;
 
-	uint32_t _dataLen; // 桢数据占用的字节数
-	uint32_t _index;   // 代表桢长度的字节索引
-	uint32_t _length;  // 代表桢长度的字节数
+	uint32_t _dataLen; // Frame数据占用的字节数
+	uint32_t _index;   // 代表Frame长度的字节索引
+	uint32_t _length;  // 代表Frame长度的字节数
 	uint32_t _dataEnd;
 	uint32_t _checkEnd;
 };

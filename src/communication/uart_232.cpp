@@ -19,7 +19,7 @@ UART232_Handle *uart_handle[USE_UART_NUM];
 
 void vTaskUart(void *pvParameters)
 {
-	uart_init();
+	uart_init();//This function starts all the uarts including ESP, IMU, and the uart to the computer.
 
 	while (true)
 	{
@@ -127,7 +127,7 @@ void uart_tx_dma_start(UART_HandleTypeDef *uartP, uint32_t len)
 	HAL_UART_Transmit_DMA(uartP, uartP->pTxBuffPtr, len);
 }
 
-/**  采用 桢头 + 包长度 的通讯协议
+/**  采用 Frame头 + 包长度 的通讯协议
  **/
 void uart_rx_data_check_withFrameHeaderAndLength(UART232_Handle *uart232P)
 {
@@ -166,9 +166,9 @@ void uart_rx_data_check_withFrameHeaderAndLength(UART232_Handle *uart232P)
 				uart232P->unReadIndex--;
 
 			if (frame->index < frame->headerLen)
-			{ // 处于桢头位置，需要判断桢头是否正确
+			{ // 处于Frame头位置，需要判断Frame头是否正确
 				if (dataTmp != frame->header[frame->index])
-				{ // 如果桢头对应不上，从当前字节开始认为下一个桢的起点
+				{ // 如果Frame头对应不上，从当前字节开始认为下一个Frame的起点
 					if (dataTmp != frame->header[0])
 					{
 						frame->index = 0;
@@ -186,7 +186,7 @@ void uart_rx_data_check_withFrameHeaderAndLength(UART232_Handle *uart232P)
 				}
 			}
 			else
-			{ // 如果不是桢头，不需要甄别，直接存入数组中，然后在分析
+			{ // 如果不是Frame头，不需要甄别，直接存入数组中，然后在分析
 				rxBuffer[frame->index] = dataTmp;
 				frame->index++;
 				if (frame->index > uart232P->rxBufferSize)
@@ -197,10 +197,10 @@ void uart_rx_data_check_withFrameHeaderAndLength(UART232_Handle *uart232P)
 				// tmp = 包前头的所有长度 (包括 帧头+命令+数据长度)
 				tmp = frame->headerLen + frame->cmdLen + frame->dataNumLen;
 				if (frame->index < tmp)
-				{ // 桢还没有发完，什么也不要做
+				{ // Frame还没有发完，什么也不要做
 				}
 				else if (frame->index == tmp)
-				{ // 计算 桢的长度
+				{ // 计算 Frame的长度
 					tmp = 0;
 					if (frame->dataNumMsbFirst == 0) // 代表长度的数据数组中，高字节在后
 					{
@@ -223,7 +223,7 @@ void uart_rx_data_check_withFrameHeaderAndLength(UART232_Handle *uart232P)
 				else
 				{
 					if (frame->length == frame->index)
-					{ // 一个桢结束了
+					{ // 一个Frame结束了
 						// go to process function
 						if (uart232P->func_data_analysis != NULL)
 						{
@@ -233,7 +233,7 @@ void uart_rx_data_check_withFrameHeaderAndLength(UART232_Handle *uart232P)
 							}
 						}
 
-						frame->index = 0; // 开始接受新的桢
+						frame->index = 0; // 开始接受新的Frame
 					}
 				}
 			}

@@ -41,6 +41,7 @@
 extern osThreadId led_thread_id;
 extern osThreadId uart_thread_id;
 extern osThreadId setup_thread_id;
+extern osThreadId stream_thread_id;
 
 uint8_t Device_Status_get(int i);
 uint8_t Device_Statusf_get(int j);

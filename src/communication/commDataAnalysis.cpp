@@ -101,7 +101,7 @@ void CommDataAnalysis::dataAnalysis()
 void CommDataAnalysis::data_connect()
 {
 	char buf[256];
-	sprintf(buf, "FMAV is running... \r\n");
+	sprintf(buf, "FMAV is running chainplain... \r\n");
 	send(buf);
 }
 

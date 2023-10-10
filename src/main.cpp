@@ -21,6 +21,7 @@
 osThreadId led_thread_id;
 osThreadId uart_thread_id;
 osThreadId setup_thread_id;
+osThreadId stream_thread_id;
 
 int main(int argc, char **argv)
 {
@@ -55,6 +56,9 @@ int main(int argc, char **argv)
 
   osThreadDef(setup, vTaskControl, osPriority::osPriorityLow, 0, 1024);
   setup_thread_id = osThreadCreate(osThread(setup), NULL);
+
+  osThreadDef(streaming, vTASKSteamingOnboardInfos, osPriority::osPriorityNormal, 0, 1024);
+  stream_thread_id = osThreadCreate(osThread(streaming), NULL);
 
   osKernelStart();
 }

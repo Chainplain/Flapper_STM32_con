@@ -1,14 +1,4 @@
-/************************************************************
- * FileName:        protocol.cpp
- * Description:     communication protocol
- *                  STM32
- * Auther:          Jinsheng
- * CreateDate:      2022-02-21
- * ModifyDate:
- * Company:         Haivoo
- * Contact:         sales@haivoo.com
- *                  www.haivoo.com
- * **********************************************************/
+
 
 #include "protocol.h"
 #include "string.h"
@@ -53,7 +43,10 @@ void CommunicationFrame::init(uint8_t *buf, uint32_t headerlen, uint32_t cmdlen,
 //
 CommunicationProtocol::CommunicationProtocol()
 {
-    _txFrame.init(_txBuffer);
+    _txFrame.init(_txBuffer);//init之后就会有确定的数据格式，因为已经设定：
+    /*
+    	void init(uint8_t *buf, uint32_t headerlen = 2, uint32_t cmdlen = 1, uint32_t datanumlen = 1, uint32_t checklen = 1);
+    */
     _rxFrame.init(_rxBuffer);
 }
 
@@ -123,7 +116,7 @@ int CommunicationProtocol::rxAnalysis(char *str)
     return rxAnalysis(recvBuf, length);
 }
 
-/**  采用 桢头 + 包长度 的通讯协议
+/**  采用 Frame头 + 包长度 的通讯协议
  **/
 int CommunicationProtocol::rxAnalysis(const uint8_t *const recvBuf, uint32_t length)
 {
@@ -136,9 +129,9 @@ int CommunicationProtocol::rxAnalysis(const uint8_t *const recvBuf, uint32_t len
 
         // 帧头 header
         if (_rxFrame._index < _rxFrame._headerEnd)
-        { // 处于桢头位置，需要判断桢头是否正确
+        { // 处于Frame头位置，需要判断Frame头是否正确
             if (dataTmp != _rxFrame._header[_rxFrame._index])
-            { // 如果桢头对应不上，从当前字节开始认为下一个桢的起点
+            { // 如果Frame头对应不上，从当前字节开始认为下一个Frame的起点
                 if (dataTmp != _rxFrame._header[0])
                 {
                     _rxFrame._index = 0;

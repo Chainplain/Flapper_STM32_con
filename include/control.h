@@ -7,6 +7,7 @@
 #include "adc.h"
 
 void vTaskControl(void *pvParameters);
+void vTASKSteamingOnboardInfos(void *pvParameters);
 
 void adc_data_received(sAdcVal* adc_val);
 

@@ -9,18 +9,18 @@
 
 typedef struct __UART_FRAME
 {
-	uint8_t *header; // 桢头的匹配字符地址
-	uint32_t headerLen; // 桢头长度
-	uint32_t cmdLen; // 桢CMD占用的字节数
+	uint8_t *header; // Frame头的匹配字符地址
+	uint32_t headerLen; // Frame头长度
+	uint32_t cmdLen; // FrameCMD占用的字节数
 	uint8_t *cmdPtr;
-	uint32_t dataNumLen; // 桢数据长度占用的字节数
+	uint32_t dataNumLen; // Frame数据长度占用的字节数
 	uint8_t dataNumMsbFirst; // 是否是先高字节后低字节
-	uint32_t dataLen; // 桢数据占用的字节数	
+	uint32_t dataLen; // Frame数据占用的字节数	
 	uint8_t *dataPtr;
 	uint32_t checkLen; // 检验位占用的字节数
 	uint8_t checkMsbFirst; // 是否是先高字节后低字节
-	uint32_t index; // 代表桢长度的字节索引
-	uint32_t length; // 代表桢长度的字节数
+	uint32_t index; // 代表Frame长度的字节索引
+	uint32_t length; // 代表Frame长度的字节数
 }UART_FRAME;
 
 typedef struct __UART232_Handle
@@ -28,8 +28,8 @@ typedef struct __UART232_Handle
 	UART_HandleTypeDef *huart;
 	
 	// 与DMA有关的变量
-	uint32_t unReadIndex; // 代表一个有效桢的第一个数据的位置
-	uint32_t unCheckIndex; // 代表一个有效桢的最后一个数据的位置
+	uint32_t unReadIndex; // 代表一个有效Frame的第一个数据的位置
+	uint32_t unCheckIndex; // 代表一个有效Frame的最后一个数据的位置
 	uint16_t toBeReadLength;
 	
 	uint32_t txBufferSize;
